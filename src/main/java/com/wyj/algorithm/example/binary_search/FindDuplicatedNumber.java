@@ -59,22 +59,27 @@ public class FindDuplicatedNumber {
         return -1;
     }
 
-    //方法四：二分查找,查找1~N的自然数序列,寻找target
-    //原始数组只是为了计算count值
+    //方法四：二分查找只是为了判断1~N中所有的数中那个是target
+    //原始数组只是为了计算count值,二分查找没有用在原始的数组上
     public int findDuplicate04(int[] nums) {
         //定义左右指针
+        //这里的左右指针,指向的不是数组索引,而是1-n个数
+        //通过左右指针的移动,从而找到target值
         int left = 1;
         int right = nums.length - 1;
 
+        //TODO 二分查找是在最外侧的,内层的for循环不是在外面的
         //从假象的原始的[1,N]自然数序列开始使用二分查找
         while (left <= right) {
-            //计算中间值
+            //计算中间值,这里的中间值就是数组中元素的中间位置的值
+            //但是mid不是target
             int mid = (left + right) / 2;
 
             //对于当前的mid值计算count值
             int count = 0;
+            //遍历数组
             for (int i = 0; i < nums.length; i++) {
-                //当时定义为i,现在为mid
+                //当时题目中定义为i,现在为mid
                 if (nums[i] <= mid) {
                     count++;
                 }
@@ -85,7 +90,7 @@ public class FindDuplicatedNumber {
                 //count小于等于mid自身,说明mid比target小,左指针右移
                 left = mid + 1;
             } else {
-                //可能为mid,不能直接为mid-1;
+                //target可能为mid,不能直接为mid-1;
                 right = mid;
             }
 
