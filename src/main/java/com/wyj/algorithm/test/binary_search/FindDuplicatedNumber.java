@@ -68,6 +68,11 @@ public class FindDuplicatedNumber {
         return -1;
     }
 
+    //
+    public int findDuplicate03(int[] nums) {
+        return -1;
+    }
+
     public static void main(String[] args) {
         int[] num01 = {1, 3, 4, 2, 2};
         int[] num02 = {1, 1};
