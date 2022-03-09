@@ -96,11 +96,27 @@ public class SlidingWindowMaximum {
         result[0] = nums[deque.getFirst()];
 
         //此时已经不需要遍历窗口了,因为从已经将索引0到k-1元素都已经判断了,当前的最大值已经有了
-        //遍历数组所有元素,
-        // 作为窗口的结束位置
+        //现在入队和出队不需要从第2个元素开始判断起了,从没有判断的新元素k开始判断,k元素是窗口的最后一个位置
         for (int i = k; i < nums.length; i++) {
-
+            //判断如果上一个窗口删掉的就是窗口最大值,那么需要将队列中的最大值删掉
+            //当前新增的元素为i,该元素为双端队列的最后一个元素,则上个窗口的第一元素索引就是i-k
+            if (!deque.isEmpty() && deque.getFirst() == i - k) {
+                deque.removeFirst();
+            }
+            //判断新增元素是否可以删除队尾元素
+            while (!deque.isEmpty() && nums[i] > nums[deque.getLast()]) {
+                deque.removeLast();
+            }
+            deque.addLast(i);
+            //保存结果,将双向队列的第一元素(最大的元素)保存到窗口第一个元素的位置
+            result[i - k + 1] = nums[deque.getFirst()];
         }
+        return result;
+    }
+
+    //方法四:左右扫描
+    public int[] maxSlidingWindow04(int[] nums, int k) {
+
         return null;
     }
 
@@ -108,7 +124,7 @@ public class SlidingWindowMaximum {
         int[] input = {1, 3, -1, -3, 5, 3, 6, 7};
         int k = 3;
         SlidingWindowMaximum slidingWindowMaximum = new SlidingWindowMaximum();
-        int[] output = slidingWindowMaximum.maxSlidingWindow02(input, k);
+        int[] output = slidingWindowMaximum.maxSlidingWindow03(input, k);
 
         for (int i : output) {
             System.out.print(i + "\t");
