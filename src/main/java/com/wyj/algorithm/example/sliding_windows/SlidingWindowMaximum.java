@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.function.IntPredicate;
 
 /**
  * @Author Wuyj
@@ -116,15 +117,51 @@ public class SlidingWindowMaximum {
 
     //方法四:左右扫描
     public int[] maxSlidingWindow04(int[] nums, int k) {
+        int n = nums.length;
+        //定义一个结果数组
+        int[] result = new int[n - k + 1];
 
-        return null;
+        //定义存放块内最大值的left和right数组,长度和原数组保持一致
+        //一个从左往右扫描,另外一个是从右往左扫描
+        int[] left = new int[n];
+        int[] right = new int[n];
+
+        //遍历数组,在一次循环中进行左右扫描
+        for (int i = 0; i < n; i++) {
+            //1.从左到右
+            //如果能整除k,就是块的起始位置,此时left[i]存入就是该元素,因为该元素是块内的第一个元素
+            if (i % k == 0) {
+                left[i] = nums[i];
+            } else {
+                //如果不是起始位置,即后面的元素,就直接跟前一个元素left[i-1]比较取最大值即可
+                left[i] = Math.max(left[i - 1], nums[i]);
+            }
+            //2.从右到左
+            //定义j和i对称,即i+j=n-1,j就是倒数的i
+            int j = n - 1 - i;
+            //从右到左方向,块内的第一元素为:j % k == k - 1
+            //同时,从右到左的第一快可能不完整,即使索引位置对k取余不是k-1,也是有可能为第一元素,加上这种特殊情况,即j==n-1
+            if (j % k == k - 1 || j == n - 1) {
+                right[j] = nums[j];
+            } else {
+                //因为是从右往左扫描的,所以是当前元素和右边的元素进行比较,所以是right[j+1]
+                right[j] = Math.max(right[j + 1], nums[j]);
+            }
+        }
+
+        //在有了left和right数组之后,再去对每个窗口计算最大值
+        for (int i = 0; i < n - k + 1; i++) {
+            //i是当前的起始位置,结束的位置为i + k - 1
+            result[i] = Math.max(right[i], left[i + k - 1]);
+        }
+        return result;
     }
 
     public static void main(String[] args) {
         int[] input = {1, 3, -1, -3, 5, 3, 6, 7};
         int k = 3;
         SlidingWindowMaximum slidingWindowMaximum = new SlidingWindowMaximum();
-        int[] output = slidingWindowMaximum.maxSlidingWindow03(input, k);
+        int[] output = slidingWindowMaximum.maxSlidingWindow04(input, k);
 
         for (int i : output) {
             System.out.print(i + "\t");
