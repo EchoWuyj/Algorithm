@@ -123,7 +123,24 @@ public class MinWindowSubstring {
         return minSubString;
     }
 
+    //方法三:滑动窗口优化
     public String minWindow03(String s, String t) {
+        //定义最小子串,保存结果,初始为空字符串
+        String minSubString = "";
+
+        //定义一个HashMap,保存t中字符出现的频次
+        HashMap<Character, Integer> tCharFrequency = new HashMap<>();
+
+        //统计t中字符频次
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            int count = tCharFrequency.getOrDefault(c, 0);
+            tCharFrequency.put(c, count + 1);
+        }
+
+        
+
+
         return null;
     }
 
