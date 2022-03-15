@@ -138,10 +138,116 @@ public class MinWindowSubstring {
             tCharFrequency.put(c, count + 1);
         }
 
-        
+        //TODO 这里是没有完整统计字串中频次,若还是从t.length()开始,则初始化时还得
+        // 从0到t.length()的字串里面字符出现的频次先去统计出来,然后再去做操作,这样不好
+        //定义左右指针,指向滑动窗口的起始和结束位置
+        int start = 0, end = 1;
 
+        //TODO 在窗口中增一个字符和减一个字符,没有必要针对每个字串再去定义一个HashMap
+        // 现在只是在原先的HashMap上做一个更改
+        //定义一个HashMap,保存s子串中字符出现的频次
+        HashMap<Character, Integer> subStrCharFrequency = new HashMap<>();
 
-        return null;
+        while (end <= s.length()) {
+
+            //end增加之后,新增的字符,因为end是不包含的,所以需要进行end-1
+            char newChar = s.charAt(end - 1);
+
+            //新增字符频次加1,没有必要再去一个一个统计子串中字符频次
+            //只是判断在t中的字符,没在t中且在s中的字符没有影响
+            if (tCharFrequency.containsKey(newChar)) {
+                subStrCharFrequency.put(newChar, subStrCharFrequency.getOrDefault(newChar, 0) + 1);
+            }
+
+            //如果当前子串符合覆盖子串的要求,并且比之前的最小子串要短,就替换
+            //TODO 将原来的if修改成while,当前字串是一致符合覆盖字串的要求,则需要使得start不停地前进
+            // 同时增加start<end保证start和end不重叠
+            while (check(tCharFrequency, subStrCharFrequency) && start < end) {
+                if (minSubString.equals("") || end - start < minSubString.length()) {
+                    minSubString = s.substring(start, end);
+                }
+
+                //对要删除的字符,频次减1
+                char removedChar = s.charAt(start);
+
+                if (tCharFrequency.containsKey(removedChar)) {
+                    subStrCharFrequency.put(removedChar, subStrCharFrequency.getOrDefault(removedChar, 0) - 1);
+                }
+
+                //只要是覆盖子串,就移动初始位置,缩小窗口,寻找当前的局部最优解
+                start++;
+            }
+            //如果不是覆盖子串,需要扩大窗口,继续寻找新的子串
+            end++;
+        }
+
+        return minSubString;
+    }
+
+    //方法四:进一步优化
+    public String minWindow04(String s, String t) {
+        //定义最小子串,保存结果,初始为空字符串
+        String minSubString = "";
+
+        //定义一个HashMap,保存t中字符出现的频次
+        HashMap<Character, Integer> tCharFrequency = new HashMap<>();
+
+        //统计t中字符频次
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            int count = tCharFrequency.getOrDefault(c, 0);
+            tCharFrequency.put(c, count + 1);
+        }
+
+        //定义左右指针,指向滑动窗口的起始和结束位置
+        int start = 0, end = 1;
+
+        //定义一个HashMap,保存s子串中字符出现的频次
+        HashMap<Character, Integer> subStrCharFrequency = new HashMap<>();
+
+        //TODO 定义一个“子串贡献值”变量,统计t中的字符在子串中出现了多少
+        int charCount = 0;
+
+        while (end <= s.length()) {
+
+            //end增加之后,新增的字符
+            char newChar = s.charAt(end - 1);
+
+            //新增字符频次加1
+            if (tCharFrequency.containsKey(newChar)) {
+                subStrCharFrequency.put(newChar, subStrCharFrequency.getOrDefault(newChar, 0) + 1);
+
+                //TODO 如果子串中频次小于t中频次,当前字符就有贡献
+                // 如果大于等于t中频次,当前字符就是没有贡献了
+                if (subStrCharFrequency.get(newChar) <= tCharFrequency.get(newChar))
+                    charCount ++;
+            }
+
+            //如果当前子串符合覆盖子串的要求,并且比之前的最小子串要短,就替换
+            //TODO 这里不再调用check()方法,通过charCount == t.length(),通过这样的方式判断其实覆盖字串
+            while ( charCount == t.length() && start < end) {
+                if (minSubString.equals("") || end - start < minSubString.length()) {
+                    minSubString = s.substring(start, end);
+                }
+
+                //对要删除的字符,频次减1
+                char removedChar = s.charAt(start);
+
+                if (tCharFrequency.containsKey(removedChar)) {
+                    subStrCharFrequency.put(removedChar, subStrCharFrequency.getOrDefault(removedChar, 0) - 1);
+
+                    //TODO 如果子串中的频次如果不够t中的频次,贡献值减少
+                    if (subStrCharFrequency.get(removedChar) < tCharFrequency.get(removedChar))
+                        charCount --;
+                }
+
+                //只要是覆盖子串,就移动初始位置,缩小窗口,寻找当前的局部最优解
+                start ++;
+            }
+            //如果不是覆盖子串,需要扩大窗口,继续寻找新的子串
+            end ++;
+        }
+        return minSubString;
     }
 
     public static void main(String[] args) {
