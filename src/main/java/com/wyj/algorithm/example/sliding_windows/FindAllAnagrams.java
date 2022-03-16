@@ -57,8 +57,8 @@ public class FindAllAnagrams {
     }
 
     //方法二:滑动窗口法,分别移动起始和结束位置
-    //基本思路:
-    // 优化窗口内部遍历每个元素进行比对,对于滑动窗口而言,窗口内大多数元素其实重复的
+    //优化思路:
+    // 窗口内部遍历每个元素进行比对,对于滑动窗口而言,窗口内大多数元素其实重复的
     // 完全可以只考虑滑动之后增加和减少的元素
     public List<Integer> findAnagrams(String s, String p) {
         //定义一个结果列表
@@ -77,7 +77,11 @@ public class FindAllAnagrams {
         //定义双指针,指向窗口的起始(包含)和结束位置(不包含)
         int start = 0, end = 1;
 
+        //TODO 结束位置的指针向后移动,扩充字串导致长度不一样,则肯定不匹配
+        // 故需要从起始位置开始向后一直移动直到抵消掉新增字符的影响,才能满足这样的要求
+
         //2.移动指针,总是截取字符出现频次全部小于等于p中字符频次的子串
+        // end是不包含在内的,所以可以等于s.length()
         while (end <= s.length()) {
             //当前新增字符
             char newChar = s.charAt(end - 1);
@@ -86,6 +90,7 @@ public class FindAllAnagrams {
             //3.判断当前子串是否符合要求
             //如果新增字符导致子串中频次超出了p中频次,那么移动start,消除新增字符的影响
             while (subStrCharCounts[newChar - 'a'] > pCharCounts[newChar - 'a'] && start < end) {
+                //频次减少
                 char removedChar = s.charAt(start);
                 subStrCharCounts[removedChar - 'a']--;
                 start++;
@@ -95,6 +100,7 @@ public class FindAllAnagrams {
             if (end - start == p.length())
                 result.add(start);
 
+            //截取字符出现频次全部小于p中字符频次的子串并且长度不等于p.length(),则是结束指针向后移动
             end++;
         }
         return result;
