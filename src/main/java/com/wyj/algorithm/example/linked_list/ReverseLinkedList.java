@@ -48,7 +48,7 @@ public class ReverseLinkedList {
         //TODO 在递的过程所做的事情
         //剩下所有节点的头节点(子问题)
         ListNode restHead = head.next;
-        //递归调用,将子问题传入,递归到最后为最后一个节点
+        //递归调用,将子问题传入,递归到最后为最后一个节点,递到最深的地方
         ListNode reversedRest = reverseList02(restHead);
 
         //TODO 在归的过程所做的事情
