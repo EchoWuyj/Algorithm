@@ -40,7 +40,25 @@ public class ReverseLinkedList {
 
     //方法二:递归
     public ListNode reverseList02(ListNode head) {
-        return null;
+        //递归的边界:寻找递归的边界,即不需要调用自己,直接返回结果
+        // head == null 表示链表为空
+        // head.next == null 表示只剩一个元素
+        if (head == null || head.next == null) return head;
+
+        //TODO 在递的过程所做的事情
+        //剩下所有节点的头节点(子问题)
+        ListNode restHead = head.next;
+        //递归调用,将子问题传入,递归到最后为最后一个节点
+        ListNode reversedRest = reverseList02(restHead);
+
+        //TODO 在归的过程所做的事情
+        //把当前节点接在翻转之后的链表末尾
+        restHead.next = head;//restHead.next表示指针指,凡是在前面的
+
+        //当前节点就是链表末尾,直接指向null
+        head.next = null;
+
+        return reversedRest;
     }
 
     public static void main(String[] args) {
@@ -59,6 +77,6 @@ public class ReverseLinkedList {
         TestLinkedList.printList(listNode1);
 
         ReverseLinkedList reverseLinkedList = new ReverseLinkedList();
-        TestLinkedList.printList(reverseLinkedList.reverseList01(listNode1));
+        TestLinkedList.printList(reverseLinkedList.reverseList02(listNode1));
     }
 }
