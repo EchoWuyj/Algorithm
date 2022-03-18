@@ -79,6 +79,6 @@ public class MergeTwoSortedLists {
         TestLinkedList.printList(listNode21);
 
         MergeTwoSortedLists mergeTwoSortedLists = new MergeTwoSortedLists();
-        TestLinkedList.printList(mergeTwoSortedLists.mergeTwoLists02(listNode11, listNode21));
+        TestLinkedList.printList(mergeTwoSortedLists.mergeTwoLists01(listNode11, listNode21));
     }
 }
