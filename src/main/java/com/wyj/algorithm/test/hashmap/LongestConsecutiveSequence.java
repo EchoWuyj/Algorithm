@@ -59,7 +59,7 @@ public class LongestConsecutiveSequence {
         return maxLength;
     }
 
-    //
+    //进一步改进
     public int longsetConsecutiveSequence03(int[] nums) {
         int maxLength = 0;
         HashSet<Integer> set = new HashSet<>();
